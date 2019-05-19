@@ -12,6 +12,8 @@ const productsDOM = document.querySelector(".products-center");
 
 // cart
 let cart = [];
+// buttons
+let buttonsDOM = [];
 
 // getting the products first locally (from json file), then from contenful
 class Products {
@@ -61,18 +63,28 @@ class UI {
   }
   getBagButtons() {
     const buttons = [...document.querySelectorAll(".bag-btn")];
+    buttonsDOM = buttons;
     buttons.forEach(button => {
       let id = button.dataset.id;
       let inCart = cart.find(item => item.id === id);
       if (inCart) {
         button.innerText = "In Cart";
         button.disabled = true;
-      } else {
-        button.addEventListener("click", event => {
-          event.target.innerText = "In Cart";
-          event.target.disabled = true;
-        });
       }
+      button.addEventListener("click", event => {
+        event.target.innerText = "In Cart";
+        event.target.disabled = true;
+        // get product from products
+        let cartItem = { ...Storage.getProduct(id), amount: 1 };
+
+        // add product to the cart
+        cart = [...cart, cartItem];
+        console.log(cart);
+        // save cart in local storage
+        // set cart values
+        // display cart item
+        // show the cart
+      });
     });
   }
 }
@@ -82,6 +94,10 @@ class Storage {
   // we are creating a static method because when we use it without instanceting the class
   static saveProducts(products) {
     localStorage.setItem("products", JSON.stringify(products));
+  }
+  static getProduct(id) {
+    let products = JSON.parse(localStorage.getItem("products"));
+    return products.find(product => product.id === id);
   }
 }
 
