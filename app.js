@@ -15,7 +15,6 @@ let cart = [];
 
 // getting the products first locally (from json file), then from contenful
 class Products {
-  // method
   async getProducts() {
     try {
       let result = await fetch("products.json");
@@ -34,8 +33,33 @@ class Products {
   }
 }
 
-// display products: is getting the products from Products or local storage class and display them
-class UI {}
+// display products: is getting the products from Products class or local storage and display them
+class UI {
+  displayProducts(products) {
+    let result = "";
+    products.forEach(product => {
+      result += `
+        <!-- single product -->
+        <article class="product">
+          <div class="img-container">
+            <img
+              src=${product.image}
+              alt="product"
+              class="product-img"
+            />
+            <button class="bag-btn" data-id=${product.id}>
+              <i class="fas fa-shopping-cart">add to bag</i>
+            </button>
+          </div>
+          <h3>${product.title}</h3>
+          <h4>$${product.price}</h4>
+        </article>
+        <!-- end of single product -->
+      `;
+    });
+    productsDOM.innerHTML = result;
+  }
+}
 
 // local storage
 class Storage {}
@@ -47,5 +71,5 @@ document.addEventListener("DOMContentLoaded", () => {
   const products = new Products();
 
   // get all products
-  products.getProducts().then(data => console.log(data));
+  products.getProducts().then(products => ui.displayProducts(products));
 });
